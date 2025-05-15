@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Typing Ultra Legend: Ascend</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --primary: #3a86ff;
+      --secondary: #ff006e;
+      --success: #38b000;
+      --warning: #ffbe0b;
+      --error: #ff5400;
+      --dark-text: #14213d;
+      --light-text: #f8f9fa;
+      --background-light: #f0f2f5;
+      --background-dark: #0a0e17;
+      --card-bg-light: #ffffff;
+      --card-bg-dark: #1a1f2b;
+      --border-light: rgba(0,0,0,0.1);
+      --border-dark: rgba(255,255,255,0.1);
+      --accent: #8338ec;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--background-light);
+      color: var(--dark-text);
+      transition: background-color 0.3s ease, color 0.3s ease;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    body.dark-mode {
+      --background-light: var(--background-dark);
+      --dark-text: var(--light-text);
+      --card-bg-light: var(--card-bg-dark);
+      --border-light: var(--border-dark);
+      --secondary: #ffee6e;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    header {
+      background-color: var(--card-bg-light);
+      box-shadow: 0 2px 10px var(--border-light);
+      padding: 15px 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid var(--border-light);
+    }
+    
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--dark-text);
+    }
+
+    .logo h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .logo span {
+      color: var(--primary);
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 30px;
+    }
+
+    nav a {
+      color: var(--dark-text);
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: var(--primary);
+    }
+
+    .user-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: none;
+      font-size: 0.9rem;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: var(--light-text);
+    }
+    
+    .btn-primary:hover {
+      background-color: #2a75ef;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(58, 134, 255, 0.3);
+    }
+
+    #darkModeToggle {
+      background: none;
+      border: none;
+      color: var(--dark-text);
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+    #darkModeToggle:hover {
+      color: var(--primary);
+    }
+
+    main {
+      padding: 40px 0;
+    }
+
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 40px 20px;
+      background-color: var(--card-bg-light);
+      border-radius: 12px;
+      box-shadow: 0 5px 15px var(--border-light);
+    }
+
+    .hero h2 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      background: linear-gradient(to right, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin-bottom: 30px;
+      color: var(--dark-text);
+      opacity: 0.8;
+    }
+    
+    .typing-app-container {
+        background-color: var(--card-bg-light);
+        border-radius: 12px;
+        box-shadow: 0 10px 30px var(--border-light);
+        padding: 30px;
+        max-width: 900px;
+        margin: 40px auto;
+        border: 1px solid var(--border-light);
+    }
+
+    .app-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .app-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .controls {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .select-wrapper {
+      position: relative;
+    }
+
+    select {
+      appearance: none;
+      background-color: var(--background-light);
+      border: 1px solid var(--border-light);
+      border-radius: 6px;
+      padding: 10px 30px 10px 15px;
+      color: var(--dark-text);
+      font-size: 0.9rem;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+    }
+    body.dark-mode select {
+        background-color: rgba(255,255,255,0.1);
+    }
+
+    .select-wrapper::after {
+      content: "\f078";
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--dark-text);
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .countdown {
+      font-size: 2.5rem;
+      text-align: center;
+      font-weight: 700;
+      margin: 20px 0;
+      color: var(--primary);
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .countdown.fade-out {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    .text-display-wrapper {
+      position: relative;
+      margin-bottom: 20px;
+    }
+    
+    .text-display {
+      background-color: var(--background-light);
+      padding: 20px;
+      border-radius: 8px;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 1.2rem;
+      line-height: 1.8; 
+      min-height: 140px; 
+      max-height: 252px; /* Approx 7 lines (1.8 * 1.2rem * 7) + padding. Adjust as needed. */
+      overflow-y: auto; /* Enable scrolling for longer texts */
+      position: relative;
+      white-space: pre-wrap; 
+      border: 1px solid var(--border-light);
+      scroll-behavior: smooth; /* Smooth scrolling within the text display */
+    }
+    body.dark-mode .text-display {
+        background-color: rgba(0,0,0,0.2);
+    }
+
+    .text-display span {
+      position: relative; 
+    }
+    .current {
+      background-color: rgba(58, 134, 255, 0.3); /* More visible current char */
+      border-radius: 2px;
+      padding: 0.05em 0; /* Tiny padding for better visual */
+    }
+    .correct {
+      color: var(--success);
+    }
+    .incorrect {
+      color: var(--error);
+      text-decoration: underline;
+      text-decoration-color: var(--error);
+      background-color: rgba(255, 84, 0, 0.15); /* Slightly more visible error background */
+    }
+
+    .cursor {
+        position: absolute;
+        height: 1.6em; /* Should be slightly taller than font char */
+        width: 2px;
+        background-color: var(--primary);
+        animation: blink 1s infinite;
+        border-radius: 1px;
+        transition: left 0.05s ease-out, top 0.05s ease-out; 
+        z-index: 10; /* Ensure cursor is on top of text */
+        pointer-events: none; /* Prevent cursor from interfering with text selection */
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    .text-input { 
+      width: 1px; /* Make it very small */
+      height: 1px;
+      position: absolute;
+      top: -100px; /* Move it way off-screen */
+      left: -100px;
+      opacity: 0;
+      border: none;
+      padding: 0;
+      overflow: hidden; /* Hide any potential rendering */
+    }
+    
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background-color: var(--background-light);
+      border-radius: 8px;
+      padding: 15px;
+      text-align: center;
+      border: 1px solid var(--border-light);
+      box-shadow: 0 2px 5px var(--border-light);
+    }
+    body.dark-mode .stat-card {
+        background-color: rgba(0,0,0,0.2);
+    }
+
+    .stat-title {
+      font-size: 0.9rem;
+      color: var(--dark-text);
+      opacity: 0.7;
+      margin-bottom: 10px;
+    }
+
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--dark-text);
+    }
+
+    .keyboard {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 30px;
+      padding: 15px;
+      background-color: var(--background-light);
+      border-radius: 8px;
+      border: 1px solid var(--border-light);
+    }
+    body.dark-mode .keyboard {
+        background-color: rgba(0,0,0,0.1);
+    }
+
+    .row {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .key {
+      min-width: 40px; 
+      height: 40px;
+      background-color: var(--card-bg-light); 
+      border: 1px solid var(--border-light);
+      border-bottom-width: 3px; /* 3D effect */
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.9rem; 
+      font-weight: 500;
+      color: var(--dark-text);
+      transition: all 0.07s ease-out; /* Faster transition for key press */
+      position: relative;
+      box-shadow: 0 2px 3px var(--border-light);
+      cursor: default; 
+    }
+    body.dark-mode .key {
+        background-color: rgba(255,255,255,0.08);
+        border-color: rgba(255,255,255,0.15);
+        border-bottom-color: rgba(255,255,255,0.1);
+        box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+    }
+
+    .key.special {
+      width: auto;
+      padding: 0 10px;
+      font-size: 0.8rem;
+    }
+    .key.space { width: 280px; }
+    .key.next-char { 
+      background-color: rgba(58, 134, 255, 0.2);
+      border-color: var(--primary);
+    }
+    .key.active { 
+      transform: translateY(2px);
+      background-color: var(--accent);
+      color: var(--light-text);
+      box-shadow: 0 0 5px var(--accent);
+      border-bottom-width: 1px;
+    }
+    .key.error-key { 
+        background-color: var(--error);
+        color: var(--light-text);
+        box-shadow: 0 0 8px var(--error);
+        transform: translateY(1px) scale(0.98); /* Slight error indication */
+        border-bottom-width: 1px;
+    }
+    
+    .results-section {
+      display: none; 
+      text-align: center;
+      margin-top: 30px;
+      animation: fadeIn 0.5s;
+      background-color: var(--card-bg-light);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px var(--border-light);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .results-section h3 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    .chart-container {
+      margin: 30px auto;
+      height: 300px;
+      max-width: 700px; 
+    }
+
+    .detailed-stats-container {
+      display: flex;
+      justify-content: space-around;
+      margin: 30px 0;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .detail-card {
+      background-color: var(--background-light);
+      border-radius: 8px;
+      padding: 20px;
+      width: 100%;
+      max-width: 400px; 
+      border: 1px solid var(--border-light);
+      box-shadow: 0 2px 5px var(--border-light);
+    }
+    body.dark-mode .detail-card {
+        background-color: rgba(0,0,0,0.2);
+    }
+
+    .detail-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .detail-list {
+      max-height: 200px;
+      overflow-y: auto;
+      padding-right: 10px; 
+    }
+    .detail-list::-webkit-scrollbar { width: 8px; }
+    .detail-list::-webkit-scrollbar-track { background: var(--background-light); border-radius: 4px;}
+    .detail-list::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+    .detail-list::-webkit-scrollbar-thumb:hover { background: #2a75ef; }
+     body.dark-mode .detail-list::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+
+
+    .detail-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .detail-item:last-child { border-bottom: none; }
+
+    .detail-key {
+      font-family: 'Roboto Mono', monospace;
+      background-color: var(--accent);
+      color: var(--light-text);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+    .detail-value {
+        font-weight: 500;
+    }
+
+    footer {
+      padding: 40px 0;
+      text-align: center;
+      margin-top: 60px;
+      border-top: 1px solid var(--border-light);
+      background-color: var(--card-bg-light);
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--dark-text);
+      opacity: 0.7;
+      text-decoration: none;
+      transition: color 0.3s, opacity 0.3s;
+    }
+    .footer-links a:hover {
+      color: var(--primary);
+      opacity: 1;
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    .social-links a {
+      color: var(--dark-text);
+      opacity: 0.7;
+      font-size: 1.2rem;
+      transition: all 0.3s;
+    }
+    .social-links a:hover {
+      color: var(--primary);
+      opacity: 1;
+      transform: translateY(-3px);
+    }
+
+    .copyright {
+      color: var(--dark-text);
+      opacity: 0.5;
+      font-size: 0.9rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h2 { font-size: 2.2rem; }
+      .hero p { font-size: 1rem; }
+      .app-header { flex-direction: column; align-items: stretch; }
+      .controls { flex-direction: column; align-items: stretch;}
+      .select-wrapper select { width: 100%; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      nav ul { display: none; }
+      .key { min-width: 30px; height: 30px; font-size: 0.8rem; margin: 3px;}
+      .key.space { width: 180px; }
+      .keyboard { padding: 10px; }
+    }
+    @media (max-width: 480px) {
+        .key { min-width: auto; flex-grow: 1; height: 35px; font-size: 0.7rem; margin: 2px;}
+        .key.special { padding: 0 5px; font-size: 0.6rem;}
+        .key.space { width: 100%; max-width: 200px; } /* Make space bar more responsive */
+        .row { gap: 3px;}
+        .countdown { font-size: 2rem; height: 60px; }
+        .text-display { font-size: 1rem; min-height: 100px; max-height: 180px;}
+        .stat-value { font-size: 1.5rem;}
+        .stat-title { font-size: 0.8rem;}
+        .app-title {font-size: 1.2rem;}
+    }
+
+  </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="navbar">
+                <a href="#" class="logo">
+                    <i class="fas fa-keyboard fa-lg"></i>
+                    <h1>Type<span>Ultra</span></h1>
+                </a>
+                <nav>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#practice-section">Practice</a></li>
+                        <li><a href="#results-section">Results</a></li>
+                    </ul>
+                </nav>
+                <div class="user-actions">
+                    <button id="darkModeToggle" title="Toggle Dark Mode"><i class="fas fa-moon"></i></button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <section class="hero">
+                <h2>Master Typing at Lightning Speed</h2>
+                <p>Enhance your typing skills with our advanced system. Practice with varied texts, adaptive exercises, and detailed analytics to become a keyboard virtuoso.</p>
+                <button class="btn btn-primary" id="start-typing-hero-btn">Start Typing Now</button>
+            </section>
+
+            <div class="typing-app-container" id="practice-section">
+                <div class="app-header">
+                    <div class="app-title">Precision Typing Practice</div>
+                    <div class="controls">
+                        <div class="select-wrapper">
+                            <select id="difficulty">
+                                <option value="easy">Easy</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="hard">Hard</option>
+                                <option value="expert">Expert</option>
+                                <option value="legendary">Legendary</option> <!-- Added Legendary -->
+                            </select>
+                        </div>
+                        <div class="select-wrapper">
+                            <select id="mode">
+                                <option value="standard" selected>Standard Text</option>
+                                <option value="code">Code Snippets</option>
+                                <option value="quotes">Famous Quotes</option>
+                                <option value="random">Random Words</option>
+                                <option value="adaptive">Adaptive Training</option> <!-- Added Adaptive -->
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" id="restart-btn">
+                            <i class="fas fa-redo-alt"></i> Restart
+                        </button>
+                    </div>
+                </div>
+
+                <div class="countdown">Get Ready...</div>
+                
+                <div class="text-display-wrapper">
+                    <div class="text-display" id="text-display" tabindex="0"></div>
+                    <div class="cursor" id="cursor"></div>
+                </div>
+                <input type="text" class="text-input" id="text-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-title">WPM</div>
+                        <div class="stat-value" id="wpm">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">Accuracy</div>
+                        <div class="stat-value" id="accuracy">0%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">Time</div>
+                        <div class="stat-value" id="time">0:00</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">Errors</div>
+                        <div class="stat-value" id="errors-stat">0</div>
+                    </div>
+                </div>
+
+                <div class="keyboard">
+                    <div class="row">
+                        <div class="key" data-key="192" data-char="`" data-shift-char="~">`</div> <div class="key" data-key="49" data-char="1" data-shift-char="!">1</div> <div class="key" data-key="50" data-char="2" data-shift-char="@">2</div> <div class="key" data-key="51" data-char="3" data-shift-char="#">3</div> <div class="key" data-key="52" data-char="4" data-shift-char="$">4</div> <div class="key" data-key="53" data-char="5" data-shift-char="%">5</div> <div class="key" data-key="54" data-char="6" data-shift-char="^">6</div> <div class="key" data-key="55" data-char="7" data-shift-char="&">7</div> <div class="key" data-key="56" data-char="8" data-shift-char="*">8</div> <div class="key" data-key="57" data-char="9" data-shift-char="(">9</div> <div class="key" data-key="48" data-char="0" data-shift-char=")">0</div> <div class="key" data-key="189" data-char="-" data-shift-char="_">-</div> <div class="key" data-key="187" data-char="=" data-shift-char="+">=</div> <div class="key special" data-key="8">Backspace</div>
+                    </div>
+                    <div class="row">
+                        <div class="key special" data-key="9">Tab</div> <div class="key" data-key="81" data-char="q">Q</div> <div class="key" data-key="87" data-char="w">W</div> <div class="key" data-key="69" data-char="e">E</div> <div class="key" data-key="82" data-char="r">R</div> <div class="key" data-key="84" data-char="t">T</div> <div class="key" data-key="89" data-char="y">Y</div> <div class="key" data-key="85" data-char="u">U</div> <div class="key" data-key="73" data-char="i">I</div> <div class="key" data-key="79" data-char="o">O</div> <div class="key" data-key="80" data-char="p">P</div> <div class="key" data-key="219" data-char="[" data-shift-char="{">[</div> <div class="key" data-key="221" data-char="]" data-shift-char="}">]</div> <div class="key special" data-key="220" data-char="\" data-shift-char="|">\</div>
+                    </div>
+                    <div class="row">
+                        <div class="key special" data-key="20">Caps Lock</div> <div class="key" data-key="65" data-char="a">A</div> <div class="key" data-key="83" data-char="s">S</div> <div class="key" data-key="68" data-char="d">D</div> <div class="key" data-key="70" data-char="f">F</div> <div class="key" data-key="71" data-char="g">G</div> <div class="key" data-key="72" data-char="h">H</div> <div class="key" data-key="74" data-char="j">J</div> <div class="key" data-key="75" data-char="k">K</div> <div class="key" data-key="76" data-char="l">L</div> <div class="key" data-key="186" data-char=";" data-shift-char=":">;</div> <div class="key" data-key="222" data-char="'" data-shift-char=""">'</div> <div class="key special" data-key="13">Enter</div>
+                    </div>
+                    <div class="row">
+                        <div class="key special" data-key="16" data-side="left">Shift</div> <div class="key" data-key="90" data-char="z">Z</div> <div class="key" data-key="88" data-char="x">X</div> <div class="key" data-key="67" data-char="c">C</div> <div class="key" data-key="86" data-char="v">V</div> <div class="key" data-key="66" data-char="b">B</div> <div class="key" data-key="78" data-char="n">N</div> <div class="key" data-key="77" data-char="m">M</div> <div class="key" data-key="188" data-char="," data-shift-char="<">,</div> <div class="key" data-key="190" data-char="." data-shift-char=">">.</div> <div class="key" data-key="191" data-char="/" data-shift-char="?">/</div> <div class="key special" data-key="16-R" data-side="right">Shift</div>
+                    </div>
+                    <div class="row">
+                        <div class="key special" data-key="17" data-side="left">Ctrl</div> <div class="key special" data-key="91">Win</div> <div class="key special" data-key="18" data-side="left">Alt</div> <div class="key space" data-key="32" data-char=" ">Space</div> <div class="key special" data-key="18-R" data-side="right">Alt</div> <div class="key special" data-key="17-R" data-side="right">Ctrl</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="results-section" id="results-section">
+                <h3>Practice Results</h3>
+                <div class="chart-container">
+                    <canvas id="speedChart"></canvas>
+                </div>
+                <div class="detailed-stats-container">
+                    <div class="detail-card">
+                        <div class="detail-title">Character Accuracy</div>
+                        <div class="detail-list" id="character-stats">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                    <div class="detail-card">
+                        <div class="detail-title">Most Common Errors</div>
+                        <div class="detail-list" id="problem-keys">
+                             <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-primary" id="try-again-btn">Try Another Round</button>
+            </div>
+
+             <section class="leaderboard-placeholder" style="margin-top: 40px; padding: 30px; background-color: var(--card-bg-light); border-radius: 12px; box-shadow: 0 5px 15px var(--border-light);">
+                <h3 style="text-align: center; font-size: 1.8rem; margin-bottom: 20px;">Global Leaderboard (Coming Soon!)</h3>
+                <p style="text-align: center; opacity: 0.7;">Compete with typists worldwide and see where you rank!</p>
+                <div style="display: flex; justify-content: space-around; margin-top: 20px; opacity:0.5; flex-wrap: wrap; gap: 10px;">
+                    <div><strong>Rank 1:</strong> Speedy Gonzales - 150 WPM</div>
+                    <div><strong>Rank 2:</strong> Keyboard Warrior - 145 WPM</div>
+                    <div><strong>Rank 3:</strong> TypeMasterFlex - 142 WPM</div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact Us</a>
+            </div>
+            <div class="social-links">
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" aria-label="Github"><i class="fab fa-github"></i></a>
+                <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            </div>
+            <div class="copyright">
+                © <span id="currentYear"></span> TypeUltra. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const textDisplay = document.getElementById('text-display');
+            const textInput = document.getElementById('text-input');
+            const wpmDisplay = document.getElementById('wpm');
+            const accuracyDisplay = document.getElementById('accuracy');
+            const timeDisplay = document.getElementById('time');
+            const errorsStatDisplay = document.getElementById('errors-stat');
+            const countdownDisplay = document.querySelector('.countdown');
+            const restartBtn = document.getElementById('restart-btn');
+            const tryAgainBtn = document.getElementById('try-again-btn');
+            const difficultySelect = document.getElementById('difficulty');
+            const modeSelect = document.getElementById('mode');
+            const resultsSection = document.getElementById('results-section');
+            const characterStatsList = document.getElementById('character-stats');
+            const problemKeysList = document.getElementById('problem-keys');
+            const virtualKeys = document.querySelectorAll('.key');
+            const cursorElement = document.getElementById('cursor');
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const startTypingHeroBtn = document.getElementById('start-typing-hero-btn');
+            const typingAppContainer = document.getElementById('practice-section');
+            
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+            // App State
+            let currentText = '';
+            let textCharsSpans = []; 
+            let startTime = null;
+            let timerInterval = null;
+            let charIndex = 0;
+            let mistakes = 0;
+            let totalTypedChars = 0;
+            let isGameActive = false;
+            let countdownTimer = null;
+            // charPerformance: { 'a': { correct: 0, incorrect: 0, total: 0, errorsMade: {'s': 1, 'd': 2} }, ... }
+            let charPerformance = {}; 
+            let speedHistory = []; 
+            let speedChartInstance = null;
+            let shiftPressed = false;
+
+            const ULTRA_LEGENDARY_EXERCISE = "Welcome, Typing Legend-in-training. Your mission begins now: 0.1% reach this speed. Decode this: 'Xylophones zigzag quickly; jackrabbits vault bold fences!' Next line - don't blink: $sudo ./launch_mind.exe && echo 'Awakened.' Insert rapid combos: qAzWsXedCrFvTgByHnUjMiK!@#%^&*()_+{}|:\"<>?~. Now imagine this: typing blindfolded while reciting π = 3.14159. Try: [Shift] + ‘complexity’ × [Focus] = Mastery. Code it: if (speed > 100 && accuracy === 100) { becomeLegend(); } Remember, symbols are sacred — []{};:'\",./-=. Conquer nerves. Own the keyboard. Precision over panic. Flow is forged in fire. You are not typing. You are commanding. Legends aren't born — they type their way there.";
+
+            const textSamples = {
+                standard: {
+                    easy: ["The quick brown fox jumps over the lazy dog.", "Practice makes perfect. Keep typing daily.", "A journey of a thousand miles begins with a single step."],
+                    medium: ["Learning to type efficiently can significantly boost your productivity.", "Regular practice helps improve muscle memory for keyboard layouts.", "The best way to predict the future is to create it."],
+                    hard: ["The juxtaposition of advanced technology and archaic customs created a unique cultural tapestry.", "Cryptography involves complex algorithms to secure information effectively.", "Success is not final, failure is not fatal: It is the courage to continue that counts."],
+                    expert: ["Quantum entanglement describes a phenomenon where particles become interconnected, instantaneously affecting each other regardless of distance.", "Bioinformatics leverages computational tools to analyze voluminous biological datasets, accelerating scientific discovery.", "The only limit to our realization of tomorrow will be our doubts of today. Strive for excellence."],
+                    legendary: [ULTRA_LEGENDARY_EXERCISE]
+                },
+                code: {
+                    easy: ["function greet() {\n  console.log('Hello World!');\n}\ngreet();", "let count = 0;\nfor (let i = 0; i < 10; i++) {\n  count += i;\n}"],
+                    medium: ["const fetchData = async (url) => {\n  const response = await fetch(url);\n  const data = await response.json();\n  return data;\n};", "class Rectangle {\n  constructor(h, w) {\n    this.height = h;\n    this.width = w;\n  }\n  get area() {\n    return this.height * this.width;\n  }\n}"],
+                    hard: ["document.querySelectorAll('.item').forEach(el => {\n  el.addEventListener('click', (e) => {\n    e.target.classList.toggle('active');\n  });\n});", "const memoizedFib = (n, memo = {}) => {\n  if (n in memo) return memo[n];\n  if (n <= 1) return n;\n  memo[n] = memoizedFib(n - 1, memo) + memoizedFib(n - 2, memo);\n  return memo[n];\n};"],
+                    expert: ["const stream = fs.createReadStream(filePath, { encoding: 'utf8' });\nstream.on('data', chunk => processChunk(chunk));\nstream.on('end', () => console.log('File complete.'));\nstream.on('error', err => console.error('Error:', err));", "SELECT e.name, d.name FROM employees e JOIN departments d ON e.dept_id = d.id WHERE e.salary > 50000;"],
+                    legendary: [ULTRA_LEGENDARY_EXERCISE] // Also add legendary to code for variety
+                },
+                quotes: {
+                    easy: ["The only way to do great work is to love what you do. - Steve Jobs", "Strive not to be a success, but rather to be of value. - Albert Einstein"],
+                    medium: ["Your time is limited, so don't waste it living someone else's life. - Steve Jobs", "The mind is everything. What you think you become. - Buddha"],
+                    hard: ["Two things are infinite: the universe and human stupidity; and I'm not sure about the universe. - Albert Einstein", "The unexamined life is not worth living. - Socrates"],
+                    expert: ["Be who you are and say what you feel, because those who mind don't matter, and those who matter don't mind. - Bernard M. Baruch", "I have not failed. I've just found 10,000 ways that won't work. - Thomas A. Edison"],
+                    legendary: [ULTRA_LEGENDARY_EXERCISE]
+                },
+                random: { 
+                    easy: () => generateRandomWords(25, 3, 6),
+                    medium: () => generateRandomWords(35, 4, 8),
+                    hard: () => generateRandomWords(45, 5, 10, true), // include some punctuation
+                    expert: () => generateRandomWords(50, 5, 12, true, true), // include numbers
+                    legendary: () => generateRandomWords(60, 3, 15, true, true, true) // include symbols
+                },
+                adaptive: { // Adaptive will use a special generator function
+                    easy: () => generateAdaptiveText(25), // Base length for adaptive text
+                    medium: () => generateAdaptiveText(35),
+                    hard: () => generateAdaptiveText(45),
+                    expert: () => generateAdaptiveText(50),
+                    legendary: () => generateAdaptiveText(60, true) // Legendary adaptive is longer and harder
+                }
+            };
+            
+            function generateRandomWords(count, minLength, maxLength, includePunctuation = false, includeNumbers = false, includeSymbols = false) {
+                const commonWords = ["the", "be", "to", "of", "and", "a", "in", "that", "have", "it", "for", "not", "on", "with", "he", "as", "you", "do", "at", "this", "but", "his", "by", "from", "they", "we", "say", "her", "she", "or", "an", "will", "my", "one", "all", "would", "there", "their", "what", "so", "up", "out", "if", "about", "who", "get", "which", "go", "me", "when", "make", "can", "like", "time", "no", "just", "him", "know", "take", "people", "into", "year", "your", "good", "some", "could", "them", "see", "other", "than", "then", "now", "look", "only", "come", "its", "over", "think", "also", "back", "after", "use", "two", "how", "our", "work", "first", "well", "way", "even", "new", "want", "because", "any", "these", "give", "day", "most", "us", "system", "program", "question", "number", "part", "place", "point", "right", "small", "through", "together", "under", "until", "very", "while", "world", "write"];
+                const punctuations = [".", ",", "?", "!"];
+                const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+                const symbols = ["@", "#", "$", "%", "^", "&", "*", "(", ")", "-", "_", "+", "=", "{", "}", "[", "]", "|", ";", ":", "<", ">"];
+                let words = [];
+
+                for (let i = 0; i < count; i++) {
+                    let word;
+                    // 10% chance to insert a number or symbol if enabled
+                    if (includeNumbers && Math.random() < 0.05) {
+                        word = numbers[Math.floor(Math.random() * numbers.length)];
+                    } else if (includeSymbols && Math.random() < 0.05) {
+                        word = symbols[Math.floor(Math.random() * symbols.length)];
+                    } else {
+                        do {
+                            word = commonWords[Math.floor(Math.random() * commonWords.length)];
+                        } while (word.length < minLength || word.length > maxLength);
+                    }
+                    
+                    if (includePunctuation && typeof word === 'string' && !symbols.includes(word) && !numbers.includes(word) && Math.random() < 0.15 && i < count -1) { // Don't add punctuation to last word or symbols/numbers
+                        word += punctuations[Math.floor(Math.random() * punctuations.length)];
+                    }
+                    words.push(word);
+                }
+                return words.join(" ") + (includePunctuation ? "." : ""); // End with a period if punctuation is on
+            }
+
+            function generateAdaptiveText(baseWordCount, isLegendary = false) {
+                let problematicChars = Object.entries(charPerformance)
+                    .map(([char, data]) => ({
+                        char,
+                        accuracy: data.total > 0 ? (data.correct / data.total) * 100 : 100,
+                        errorRate: data.total > 0 ? data.incorrect / data.total : 0,
+                        total: data.total,
+                        // Weighted score: lower is worse. Prioritize low accuracy and high error rate.
+                        // Give higher weight to chars typed more often but still wrong.
+                        score: (data.total > 0 ? (data.correct / data.total) : 1) - (data.incorrect / (data.total + 5)) // +5 to avoid division by zero and soften impact of few attempts
+                    }))
+                    .filter(item => item.total > 2 && item.score < 0.9) // Consider chars typed at least 3 times and score < 90%
+                    .sort((a, b) => a.score - b.score); // Sort by score, worst first
+
+                if (problematicChars.length === 0) {
+                    // If no specific problems, or not enough data, fall back to random words of selected difficulty
+                    const difficulty = difficultySelect.value;
+                    return generateRandomWords(baseWordCount, 
+                        difficulty === 'easy' || difficulty === 'medium' ? 3 : 5, 
+                        difficulty === 'expert' || difficulty === 'legendary' ? 12 : 8, 
+                        true, true, isLegendary);
+                }
+
+                let adaptiveWords = [];
+                const targetChars = problematicChars.slice(0, 5).map(pc => pc.char); // Focus on top 5 problem chars
+                
+                // Generate some random words as a base
+                adaptiveWords = generateRandomWords(Math.floor(baseWordCount * 0.6), 3, 7, true).split(' ');
+
+                // Inject problematic characters
+                for (let i = 0; i < Math.ceil(baseWordCount * 0.4); i++) {
+                    const charToInject = targetChars[Math.floor(Math.random() * targetChars.length)] || 'e'; // fallback to 'e'
+                    // Create short words or sequences with the problematic character
+                    let newWord = charToInject;
+                    if (Math.random() > 0.5) { // Prepend
+                        newWord = (String.fromCharCode(97 + Math.floor(Math.random() * 26))) + newWord;
+                        if (Math.random() > 0.5) newWord = (String.fromCharCode(97 + Math.floor(Math.random() * 26))) + newWord;
+                    } else { // Append
+                        newWord += (String.fromCharCode(97 + Math.floor(Math.random() * 26)));
+                        if (Math.random() > 0.5) newWord += (String.fromCharCode(97 + Math.floor(Math.random() * 26)));
+                    }
+                    
+                    // Insert this new word at a random position
+                    adaptiveWords.splice(Math.floor(Math.random() * adaptiveWords.length), 0, newWord);
+                }
+                
+                // Add some symbols if legendary adaptive
+                if (isLegendary) {
+                    const symbols = "!@#$%^&*()_+{}[]:;'<>,.?/\\|-=";
+                    for(let i=0; i < 5; i++) {
+                        adaptiveWords.splice(Math.floor(Math.random() * adaptiveWords.length), 0, symbols[Math.floor(Math.random() * symbols.length)]);
+                    }
+                }
+
+                return adaptiveWords.slice(0, baseWordCount).join(" ") + ".";
+            }
+
+
+            function loadText() {
+                const difficulty = difficultySelect.value;
+                const mode = modeSelect.value;
+                let selectedTextsOrFunc = textSamples[mode]?.[difficulty];
+
+                if (typeof selectedTextsOrFunc === 'function') { 
+                    currentText = selectedTextsOrFunc();
+                } else if (Array.isArray(selectedTextsOrFunc) && selectedTextsOrFunc.length > 0) {
+                    currentText = selectedTextsOrFunc[Math.floor(Math.random() * selectedTextsOrFunc.length)];
+                } else if (mode === 'adaptive' && typeof textSamples.adaptive[difficulty] === 'function') { // Specific handling for adaptive
+                    currentText = textSamples.adaptive[difficulty]();
+                }
+                else {
+                    currentText = "Error: Text sample not found. Please select another option or try a different difficulty.";
+                }
+                
+                textDisplay.innerHTML = '';
+                textCharsSpans = []; 
+                // Reset character performance only if not in adaptive mode or if it's the first adaptive round
+                // This way, adaptive mode builds upon cumulative data.
+                // For now, let's keep charPerformance persistent across sessions until a full reset mechanism is implemented.
+                // if (mode !== 'adaptive') {
+                //    charPerformance = {}; 
+                // }
+
+
+                currentText.split('').forEach(char => {
+                    const span = document.createElement('span');
+                    span.textContent = char;
+                    textDisplay.appendChild(span);
+                    textCharsSpans.push(span);
+                });
+                
+                textDisplay.scrollTop = 0; // Scroll to top of text display
+                resetStateAndElements();
+                updateCursorPosition();
+            }
+
+            function resetStateAndElements() {
+                isGameActive = false;
+                charIndex = 0;
+                mistakes = 0;
+                totalTypedChars = 0;
+                startTime = null;
+                shiftPressed = false;
+                
+                if (timerInterval) clearInterval(timerInterval);
+                if (countdownTimer) clearInterval(countdownTimer);
+                timerInterval = null;
+                countdownTimer = null;
+
+                wpmDisplay.textContent = '0';
+                accuracyDisplay.textContent = '0%';
+                timeDisplay.textContent = '0:00';
+                errorsStatDisplay.textContent = '0';
+                
+                textInput.value = '';
+                textInput.disabled = true;
+
+                resultsSection.style.display = 'none';
+                countdownDisplay.style.display = 'flex';
+                countdownDisplay.classList.remove('fade-out');
+                countdownDisplay.textContent = 'Get Ready...';
+                
+                textCharsSpans.forEach(span => span.className = ''); // Clear all classes
+                if (textCharsSpans.length > 0) {
+                    textCharsSpans[0].classList.add('current');
+                }
+                virtualKeys.forEach(key => key.className = 'key' + (key.classList.contains('special') ? ' special' : '') + (key.classList.contains('space') ? ' space' : '')); // Reset to base classes
+                updateCursorPosition(); 
+                highlightNextKeyOnKeyboard();
+            }
+
+            function startCountdown() {
+                resetStateAndElements(); 
+                let count = 3;
+                countdownDisplay.textContent = count;
+                
+                countdownTimer = setInterval(() => {
+                    count--;
+                    if (count > 0) {
+                        countdownDisplay.textContent = count;
+                    } else {
+                        clearInterval(countdownTimer);
+                        countdownDisplay.textContent = 'Go!';
+                        setTimeout(() => {
+                            countdownDisplay.classList.add('fade-out');
+                            // Wait for fade out before hiding, then start game
+                            setTimeout(() => {
+                                countdownDisplay.style.display = 'none';
+                                startGame();
+                            }, 300); 
+                        }, 500);
+                    }
+                }, 1000);
+            }
+            
+            function startGame() {
+                isGameActive = true;
+                textInput.disabled = false;
+                // Prevent scroll on focus, then scroll practice area into view
+                textInput.focus({ preventScroll: true }); 
+                typingAppContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+                startTime = new Date();
+                timerInterval = setInterval(updateStats, 1000);
+                updateCursorPosition();
+                highlightNextKeyOnKeyboard();
+            }
+
+            function updateStats() {
+                if (!isGameActive || !startTime) return;
+
+                const currentTime = new Date();
+                const timeElapsedSeconds = Math.max(0, Math.round((currentTime - startTime) / 1000));
+                
+                const minutes = Math.floor(timeElapsedSeconds / 60);
+                const seconds = timeElapsedSeconds % 60;
+                timeDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+                const correctCharsForWPM = Math.max(0, charIndex - mistakes);
+                const wordsTyped = correctCharsForWPM / 5; 
+                const timeElapsedMinutes = timeElapsedSeconds / 60;
+                const wpm = timeElapsedMinutes > 0 ? Math.round(wordsTyped / timeElapsedMinutes) : 0;
+                wpmDisplay.textContent = wpm;
+
+                const accuracy = totalTypedChars > 0 ? Math.max(0, Math.round(((totalTypedChars - mistakes) / totalTypedChars) * 100)) : 0;
+                accuracyDisplay.textContent = `${accuracy}%`;
+                errorsStatDisplay.textContent = mistakes;
+            }
+
+            function handleInputEvent(event) { // Changed from handleInput to handleInputEvent to avoid name clash
+                if (!isGameActive || textInput.disabled) return;
+
+                // This function will be triggered by the 'input' event on the hidden textInput.
+                // We assume the character is already in textInput.value for this event.
+                // For better cross-browser compatibility and direct key capture, keydown might be preferred.
+                // However, since textInput is hidden and used as a capture mechanism, 'input' is okay.
+                // The actual typed character is retrieved from the keyboard event (see keydown listener).
+            }
+            
+            function processTypedCharacter(typedChar) {
+                 if (!isGameActive || charIndex >= textCharsSpans.length) return;
+
+                totalTypedChars++;
+                const expectedCharSpan = textCharsSpans[charIndex];
+                const expectedChar = expectedCharSpan.textContent;
+
+                if (!charPerformance[expectedChar]) {
+                    charPerformance[expectedChar] = { correct: 0, incorrect: 0, total: 0, errorsMade: {} };
+                }
+                charPerformance[expectedChar].total++;
+
+                expectedCharSpan.classList.remove('current');
+                if (typedChar === expectedChar) {
+                    expectedCharSpan.classList.add('correct');
+                    charPerformance[expectedChar].correct++;
+                    highlightKeyOnKeyboard(expectedChar, false, shiftPressed); 
+                } else {
+                    expectedCharSpan.classList.add('incorrect');
+                    mistakes++;
+                    charPerformance[expectedChar].incorrect++;
+                    if (!charPerformance[expectedChar].errorsMade[typedChar]) {
+                        charPerformance[expectedChar].errorsMade[typedChar] = 0;
+                    }
+                    charPerformance[expectedChar].errorsMade[typedChar]++;
+                    highlightKeyOnKeyboard(expectedChar, true, shiftPressed); 
+                }
+                
+                charIndex++;
+
+                if (charIndex < textCharsSpans.length) {
+                    textCharsSpans[charIndex].classList.add('current');
+                } else {
+                    endGame();
+                    return;
+                }
+                updateCursorPosition();
+                highlightNextKeyOnKeyboard();
+                updateStats(); 
+            }
+
+
+            function endGame() {
+                isGameActive = false;
+                textInput.disabled = true;
+                if (timerInterval) clearInterval(timerInterval);
+                updateStats(); 
+
+                const finalWPM = parseInt(wpmDisplay.textContent);
+                const finalAccuracy = parseInt(accuracyDisplay.textContent.replace('%',''));
+                if (!isNaN(finalWPM) && !isNaN(finalAccuracy)) { // Ensure valid numbers
+                    speedHistory.push({ time: new Date(), wpm: finalWPM, accuracy: finalAccuracy });
+                }
+                
+                displayResults();
+                resultsSection.style.display = 'block';
+                resultsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+            
+            function updateCursorPosition() {
+                if (charIndex < textCharsSpans.length && textCharsSpans[charIndex]) {
+                    const currentCharSpan = textCharsSpans[charIndex];
+                    
+                    let top = currentCharSpan.offsetTop;
+                    let left = currentCharSpan.offsetLeft;
+
+                    // Auto-scroll text display
+                    const displayRect = textDisplay.getBoundingClientRect();
+                    const charRect = currentCharSpan.getBoundingClientRect();
+                    
+                    // If char is outside visible bounds of textDisplay, scroll
+                    if (charRect.bottom > displayRect.bottom - 5) { // 5px buffer
+                        textDisplay.scrollTop += (charRect.bottom - displayRect.bottom + 10); // scroll down
+                    } else if (charRect.top < displayRect.top + 5) {
+                        textDisplay.scrollTop -= (displayRect.top - charRect.top + 10); // scroll up
+                    }
+
+                    cursorElement.style.top = `${top - textDisplay.scrollTop}px`; // Position relative to scrolled textDisplay
+                    cursorElement.style.left = `${left}px`;
+                    cursorElement.style.height = `${currentCharSpan.offsetHeight}px`;
+
+
+                } else if (charIndex > 0 && charIndex === textCharsSpans.length && textCharsSpans[charIndex-1]) { 
+                    const lastCharSpan = textCharsSpans[charIndex - 1];
+                    cursorElement.style.top = `${lastCharSpan.offsetTop - textDisplay.scrollTop}px`;
+                    cursorElement.style.left = `${lastCharSpan.offsetLeft + lastCharSpan.offsetWidth}px`;
+                    cursorElement.style.height = `${lastCharSpan.offsetHeight}px`;
+                } else { 
+                     cursorElement.style.top = `0px`;
+                     cursorElement.style.left = `0px`;
+                     if (textCharsSpans.length > 0 && textCharsSpans[0]){
+                         cursorElement.style.height = `${textCharsSpans[0].offsetHeight}px`;
+                     }
+                }
+                cursorElement.style.display = (isGameActive && charIndex < currentText.length) ? 'block' : 'none';
+            }
+
+            function highlightKeyOnKeyboard(char, isError, isShiftPressed) {
+                let keyCodeToFind;
+                let targetChar = char;
+            
+                // Find the key element based on the character and shift state
+                let keyElement;
+                virtualKeys.forEach(key => {
+                    const keyChar = key.dataset.char;
+                    const keyShiftChar = key.dataset.shiftChar;
+            
+                    if (isShiftPressed && keyShiftChar === targetChar) {
+                        keyElement = key;
+                    } else if (!isShiftPressed && keyChar === targetChar.toLowerCase()) { // Match lowercase if not shift
+                        keyElement = key;
+                    } else if (keyChar === targetChar) { // Fallback for direct match (e.g. space, or if case matches)
+                         keyElement = key;
+                    }
+                });
+                // Special case for space
+                if (targetChar === ' ') {
+                    keyElement = document.querySelector('.key.space');
+                }
+
+                if (keyElement) {
+                    keyElement.classList.add(isError ? 'error-key' : 'active');
+                    setTimeout(() => {
+                        keyElement.classList.remove('active', 'error-key');
+                    }, 120); 
+                }
+            }
+            
+            function highlightNextKeyOnKeyboard() {
+                virtualKeys.forEach(k => k.classList.remove('next-char'));
+                if (isGameActive && charIndex < textCharsSpans.length) {
+                    const nextChar = textCharsSpans[charIndex].textContent;
+                    let keyElement;
+
+                    virtualKeys.forEach(key => {
+                        const keyChar = key.dataset.char;
+                        const keyShiftChar = key.dataset.shiftChar;
+                        // Check if nextChar requires shift
+                        const requiresShift = (nextChar === nextChar.toUpperCase() && nextChar !== nextChar.toLowerCase()) || 
+                                              (keyShiftChar && keyShiftChar === nextChar);
+                        
+                        if (requiresShift && keyShiftChar === nextChar) {
+                             keyElement = key;
+                        } else if (!requiresShift && keyChar === nextChar.toLowerCase()){
+                             keyElement = key;
+                        } else if (keyChar === nextChar) { // Fallback (e.g. space)
+                             keyElement = key;
+                        }
+                    });
+                     if (nextChar === ' ') {
+                        keyElement = document.querySelector('.key.space');
+                    }
+
+                    if (keyElement) {
+                        keyElement.classList.add('next-char');
+                    }
+                }
+            }
+
+
+            function displayResults() {
+                characterStatsList.innerHTML = '';
+                const sortedCharPerformance = Object.entries(charPerformance)
+                    .map(([char, data]) => ({ 
+                        char, 
+                        ...data, 
+                        accuracy: data.total > 0 ? (data.correct / data.total) * 100 : 0 
+                    }))
+                    .filter(item => item.total > 0) // Only show characters that were encountered
+                    .sort((a, b) => a.accuracy - b.accuracy || b.total - a.total); 
+
+                sortedCharPerformance.slice(0, 15).forEach(item => { 
+                    const li = document.createElement('div');
+                    li.className = 'detail-item';
+                    const charDisplay = item.char === ' ' ? "'Space'" : `'${item.char}'`;
+                    li.innerHTML = `<span class="detail-key">${charDisplay}</span> <span class="detail-value">${item.accuracy.toFixed(1)}% (${item.correct}/${item.total})</span>`;
+                    characterStatsList.appendChild(li);
+                });
+                if (characterStatsList.childNodes.length === 0) {
+                     characterStatsList.innerHTML = `<div class="detail-item">No typing data yet for character accuracy.</div>`;
+                }
+
+                problemKeysList.innerHTML = '';
+                const problemChars = Object.entries(charPerformance)
+                    .flatMap(([expected, data]) => 
+                        Object.entries(data.errorsMade || {}).map(([typed, count]) => ({
+                            expected,
+                            typed,
+                            count
+                        }))
+                    )
+                    .sort((a,b) => b.count - a.count) // Sort by most frequent errors
+                    .slice(0,10);
+
+                 problemChars.forEach(item => {
+                    const li = document.createElement('div');
+                    li.className = 'detail-item';
+                    const expectedKey = item.expected === ' ' ? 'Space' : item.expected;
+                    const typedKey = item.typed === ' ' ? 'Space' : item.typed;
+                    li.innerHTML = `Expected <span class="detail-key">'${expectedKey}'</span>, typed <span class="detail-key" style="background-color:var(--error);">'${typedKey}'</span>: <span class="detail-value">${item.count} times</span>`;
+                    problemKeysList.appendChild(li);
+                });
+                 if (problemKeysList.childNodes.length === 0) {
+                     problemKeysList.innerHTML = `<div class="detail-item">No common errors recorded or 100% accuracy!</div>`;
+                }
+
+
+                const chartLabels = speedHistory.map(entry => new Intl.DateTimeFormat('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(entry.time));
+                const wpmData = speedHistory.map(entry => entry.wpm);
+                const accuracyData = speedHistory.map(entry => entry.accuracy);
+
+                if (speedChartInstance) {
+                    speedChartInstance.destroy();
+                }
+                const ctx = document.getElementById('speedChart').getContext('2d');
+                speedChartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: chartLabels.slice(-10), 
+                        datasets: [
+                            {
+                                label: 'WPM',
+                                data: wpmData.slice(-10),
+                                borderColor: 'var(--primary)',
+                                backgroundColor: 'rgba(58, 134, 255, 0.1)',
+                                tension: 0.3,
+                                yAxisID: 'yWPM',
+                                fill: true
+                            },
+                            {
+                                label: 'Accuracy (%)',
+                                data: accuracyData.slice(-10),
+                                borderColor: 'var(--success)',
+                                backgroundColor: 'rgba(56, 176, 0, 0.1)',
+                                tension: 0.3,
+                                yAxisID: 'yAccuracy',
+                                fill: true
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            yWPM: {
+                                type: 'linear', display: true, position: 'left', title: { display: true, text: 'WPM' }, min: 0,
+                                ticks: { color: getComputedStyle(document.body).getPropertyValue('--dark-text') }
+                            },
+                            yAccuracy: {
+                                type: 'linear', display: true, position: 'right', title: { display: true, text: 'Accuracy (%)' }, min: 0, max: 100, grid: { drawOnChartArea: false },
+                                ticks: { color: getComputedStyle(document.body).getPropertyValue('--dark-text') }
+                            },
+                            x: { ticks: { color: getComputedStyle(document.body).getPropertyValue('--dark-text') } }
+                        },
+                        plugins: {
+                            legend: { labels: { color: getComputedStyle(document.body).getPropertyValue('--dark-text') } },
+                            tooltip: { mode: 'index', intersect: false }
+                        }
+                    }
+                });
+            }
+            
+            function applyDarkModePreference() {
+                const isDarkMode = localStorage.getItem('darkMode') === 'true';
+                document.body.classList.toggle('dark-mode', isDarkMode);
+                darkModeToggle.innerHTML = isDarkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+                if(speedChartInstance) displayResults(); 
+            }
+
+            darkModeToggle.addEventListener('click', () => {
+                const isDarkMode = document.body.classList.toggle('dark-mode');
+                localStorage.setItem('darkMode', isDarkMode);
+                applyDarkModePreference();
+            });
+
+            restartBtn.addEventListener('click', () => {loadText(); startCountdown();});
+            tryAgainBtn.addEventListener('click', () => {
+                resultsSection.style.display = 'none'; 
+                loadText(); 
+                startCountdown(); 
+            });
+            difficultySelect.addEventListener('change', () => { loadText(); startCountdown(); });
+            modeSelect.addEventListener('change', () => { loadText(); startCountdown(); });
+            
+            textInput.addEventListener('input', handleInputEvent); // Kept for compatibility, but keydown is primary
+            textDisplay.addEventListener('click', () => {
+                if (isGameActive && !textInput.disabled) {
+                    textInput.focus({ preventScroll: true });
+                    typingAppContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === "Shift") {
+                    shiftPressed = true;
+                    virtualKeys.forEach(key => {
+                        if (key.dataset.key === "16" || key.dataset.key === "16-R") key.classList.add('active');
+                    });
+                } else if (e.key === "Control") {
+                    virtualKeys.forEach(key => {
+                        if (key.dataset.key === "17" || key.dataset.key === "17-R") key.classList.add('active');
+                    });
+                } else if (e.key === "Alt") {
+                     virtualKeys.forEach(key => {
+                        if (key.dataset.key === "18" || key.dataset.key === "18-R") key.classList.add('active');
+                    });
+                } else if (e.key === "Meta" || e.key === "OS") { // OS for Windows key
+                     virtualKeys.forEach(key => {
+                        if (key.dataset.key === "91") key.classList.add('active');
+                    });
+                }
+
+                // If game is active and the key isn't a modifier-only press (like just Shift)
+                if (isGameActive && !textInput.disabled && !e.metaKey && !e.ctrlKey && e.key !== "Shift" && e.key !== "Control" && e.key !== "Alt" && e.key !== "CapsLock" && e.key !== "Tab" && e.key !== "Escape") {
+                    e.preventDefault(); // Prevent default action for typable keys
+                    let typedChar = e.key;
+                    
+                    // Handle Enter and Space specifically for `processTypedCharacter`
+                    if (e.key === "Enter") typedChar = textCharsSpans[charIndex]?.textContent === '\n' ? '\n' : e.key; // Allow actual newline if expected
+                    else if (e.key === " ") typedChar = " ";
+                    // For other characters, `e.key` should be correct (respects shift for symbols and case)
+                    
+                    processTypedCharacter(typedChar);
+
+                    // Visual feedback for non-modifier keys pressed during game
+                    let activeKeyElement = null;
+                    virtualKeys.forEach(vk => { // More robust key finding for visual feedback
+                        if (vk.dataset.char === typedChar.toLowerCase() && !shiftPressed && !vk.dataset.shiftChar) activeKeyElement = vk;
+                        if (vk.dataset.shiftChar === typedChar && shiftPressed) activeKeyElement = vk;
+                        if (vk.dataset.char === typedChar && !vk.dataset.shiftChar) activeKeyElement = vk; // Fallback for special chars like space
+                         if (typedChar === ' ' && vk.classList.contains('space')) activeKeyElement = vk; // Explicit space
+                    });
+                    if (activeKeyElement) {
+                         activeKeyElement.classList.add('active');
+                         setTimeout(() => activeKeyElement.classList.remove('active'), 120);
+                    }
+
+                } else if (isGameActive && e.key === "Backspace") { // Rudimentary backspace handling (visual only for now)
+                    e.preventDefault();
+                     const backspaceKey = document.querySelector('.key[data-key="8"]');
+                     if (backspaceKey) {
+                         backspaceKey.classList.add('active');
+                         setTimeout(() => backspaceKey.classList.remove('active'), 120);
+                     }
+                     // Actual backspace logic would require charIndex--, re-rendering, etc. (omitted for complexity this round)
+                }
+            });
+
+            document.addEventListener('keyup', (e) => {
+                if (e.key === "Shift") {
+                    shiftPressed = false;
+                    virtualKeys.forEach(key => {
+                        if (key.dataset.key === "16" || key.dataset.key === "16-R") key.classList.remove('active');
+                    });
+                } else if (e.key === "Control") {
+                    virtualKeys.forEach(key => {
+                        if (key.dataset.key === "17" || key.dataset.key === "17-R") key.classList.remove('active');
+                    });
+                } else if (e.key === "Alt") {
+                     virtualKeys.forEach(key => {
+                        if (key.dataset.key === "18" || key.dataset.key === "18-R") key.classList.remove('active');
+                    });
+                } else if (e.key === "Meta" || e.key === "OS") {
+                     virtualKeys.forEach(key => {
+                        if (key.dataset.key === "91") key.classList.remove('active');
+                    });
+                } else {
+                    // General keyup visual reset (can be refined)
+                    const keyElement = Array.from(virtualKeys).find(vk => vk.classList.contains('active') && (vk.dataset.char === e.key.toLowerCase() || vk.dataset.shiftChar === e.key));
+                     if (keyElement) {
+                        keyElement.classList.remove('active');
+                    }
+                }
+            });
+            
+            startTypingHeroBtn.addEventListener('click', () => {
+                typingAppContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                // Small delay to allow scroll before starting countdown which might re-focus
+                setTimeout(() => {
+                    loadText();
+                    startCountdown();
+                }, 300); 
+            });
+
+            applyDarkModePreference(); 
+            loadText();
+            startCountdown(); 
+            
+            window.addEventListener('resize', updateCursorPosition);
+            document.fonts.ready.then(updateCursorPosition);
+        });
+    </script>
+</body>
+</html>
